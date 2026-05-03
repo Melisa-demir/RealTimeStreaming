@@ -1,0 +1,18 @@
+<Solution>
+  <Folder Name="/Frontend/" />
+  <Folder Name="/Frontend/ReactApp/" />
+  <Folder Name="/Services/" />
+  <Folder Name="/Services/ApiGateway/">
+    <Project Path="ApiGateway/ApiGateway.csproj" />
+  </Folder>
+  <Folder Name="/Services/NotificationService/">
+    <Project Path="NotificationService/NotificationService.csproj" />
+  </Folder>
+  <Folder Name="/Services/StreamingService/">
+    <Project Path="StreamingService/StreamingService.csproj" />
+  </Folder>
+  <Folder Name="/Shared/" />
+  <Folder Name="/Shared/SharedLibrary/">
+    <Project Path="SharedLibrary/SharedLibrary.csproj" />
+  </Folder>
+</Solution>
