@@ -26,7 +26,13 @@ namespace SharedLibrary
         }
         public void PublishMessage(string queueName, string message)
         {
-            _channel.QueueDeclare(queue: queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
+            _channel.QueueDeclare(
+    queue: queueName,
+    durable: true, // Kuyruğu kalıcı yapıyoruz
+    exclusive: false, // Kuyruk yalnızca bir bağlantıya özel değil
+    autoDelete: false, // Kuyruk otomatik olarak silinmeyecek
+    arguments: null // Ek argüman yok
+);
             var body = Encoding.UTF8.GetBytes(message);
             _channel.BasicPublish(exchange: "", routingKey: queueName, basicProperties: null, body: body);
         }

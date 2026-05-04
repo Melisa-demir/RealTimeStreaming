@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SharedLibrary;
 
 namespace StreamingService.Controllers
@@ -10,6 +8,7 @@ namespace StreamingService.Controllers
     public class StreamingController : ControllerBase
     {
         private readonly RabbitMqHelper _rabbitMqHelper;
+
         public StreamingController(RabbitMqHelper rabbitMqHelper)
         {
             _rabbitMqHelper = rabbitMqHelper;
