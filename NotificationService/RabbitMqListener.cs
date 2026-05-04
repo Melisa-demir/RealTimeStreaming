@@ -21,7 +21,15 @@ namespace NotificationService
 
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
-            _channel.QueueDeclare(queue: "notification-queue", durable: false, exclusive: false, autoDelete: false, arguments: null);
+            _channel.QueueDeclare(
+            queue: "notification-queue",
+            durable: true,
+            exclusive: false,
+            autoDelete: false,
+            arguments: null
+            );
+
+            _channel.BasicQos(0, 1, false);
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
