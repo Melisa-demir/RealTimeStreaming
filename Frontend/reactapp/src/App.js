@@ -1,47 +1,51 @@
 import React, { useEffect, useState } from "react";
 import * as signalR from "@microsoft/signalr";
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
 
 function App() {
     const [messages, setMessages] = useState([]);
+    const [connection, setConnection] = useState(null);
 
     useEffect(() => {
-        const connection = new signalR.HubConnectionBuilder()
-            .withUrl("http://localhost:5002/streamingHub") // StreamingService URL'si
+        const newConnection = new signalR.HubConnectionBuilder()
+            .withUrl("http://localhost:5027/streamingHub")
+            .withAutomaticReconnect()
             .build();
 
-        connection.on("ReceiveMessage", (user, message) => {
+        newConnection.on("ReceiveMessage", (user, message) => {
             setMessages((prev) => [...prev, `${user}: ${message}`]);
         });
 
-        connection.start().catch(err => console.error("SignalR Connection Error: ", err));
+        newConnection
+            .start()
+            .then(() => {
+                console.log("SignalR connected");
+                setConnection(newConnection);
+            })
+            .catch((err) => console.error("SignalR Connection Error: ", err));
+
+        return () => {
+            newConnection.stop();
+        };
     }, []);
-                
-        return (
+
+    const sendMessage = async () => {
+        if (connection) {
+            await connection.invoke("SendMessage", "Melisa", "Merhaba, gerçek zamanlı mesaj!");
+        }
+    };
+
+    return (
         <div className="App">
-            <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo" />
-                <p>
-                    Edit <code>src/App.js</code> and save to reload.
-                </p>
-                <a
-                    className="App-link"
-                    href="https://reactjs.org"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Learn React
-                </a>
-            </header>
-            <div>
-                <h1>Real-Time Messages</h1>
-                <ul>
-                    {messages.map((msg, index) => (
-                        <li key={index}>{msg}</li>
-                    ))}
-                </ul>
-            </div>
+            <h1>Real-Time Messages</h1>
+
+            <button onClick={sendMessage}>Mesaj Gönder</button>
+
+            <ul>
+                {messages.map((msg, index) => (
+                    <li key={index}>{msg}</li>
+                ))}
+            </ul>
         </div>
     );
 }

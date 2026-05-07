@@ -12,8 +12,8 @@ namespace SharedLibrary
     {
         private readonly IConnection? _connection;
         private readonly IModel _channel;
-    
-    public RabbitMqHelper(string hostname, string username, string password)
+
+        public RabbitMqHelper(string hostname, string username, string password)
         {
             var factory = new ConnectionFactory()
             {
@@ -26,20 +26,26 @@ namespace SharedLibrary
         }
         public void PublishMessage(string queueName, string message)
         {
+            Console.WriteLine($"RabbitMQ Publish başladı. Queue: {queueName}, Message: {message}");
+
             _channel.QueueDeclare(
-    queue: queueName,
-    durable: true, // Kuyruğu kalıcı yapıyoruz
-    exclusive: false, // Kuyruk yalnızca bir bağlantıya özel değil
-    autoDelete: false, // Kuyruk otomatik olarak silinmeyecek
-    arguments: null // Ek argüman yok
-);
+                queue: queueName,
+                durable: true,
+                exclusive: false,
+                autoDelete: false,
+                arguments: null
+            );
+
             var body = Encoding.UTF8.GetBytes(message);
-            _channel.BasicPublish(exchange: "", routingKey: queueName, basicProperties: null, body: body);
-        }
-        public void Dispose()
-        {
-            _channel.Close();
-            _connection.Close();
+
+            _channel.BasicPublish(
+                exchange: "",
+                routingKey: queueName,
+                basicProperties: null,
+                body: body
+            );
+
+            Console.WriteLine("RabbitMQ Publish tamamlandı.");
         }
     }
 }
